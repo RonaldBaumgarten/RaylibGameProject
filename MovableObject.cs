@@ -68,6 +68,7 @@ class MovableObject
         }
 
     }
+    
     public void Move()
     {
         switch (orientation)
@@ -119,9 +120,7 @@ class MovableObject
             case 3:
                 xco -= speedInPixels;
                 if(xco < 0)
-                {
                     xco = Raylib.GetScreenWidth();
-                }
                     
                 break;
         }
