@@ -14,6 +14,7 @@
     public void update()
     {
         player.Draw();
+        player.update();
         enemy.Draw();
         enemy.Move();
 

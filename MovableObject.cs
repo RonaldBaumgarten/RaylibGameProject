@@ -5,7 +5,7 @@ class MovableObject
     MobSize size;
     Color color;
     int speedInPixels;
-    int orientation;
+    protected int orientation;
     int xco;
     int yco;
 
@@ -89,10 +89,11 @@ class MovableObject
                 break;
             case 3:
                 xco -= speedInPixels;
-                if (yco < 0)
-                    yco = Raylib.GetScreenHeight();
+                if (xco < 0)
+                    xco = Raylib.GetScreenWidth();
                 break;
         }
+        Raylib.DrawText("X = " + xco, 30, 30, 50, Raylib.BLACK);
     }
 
 
@@ -117,10 +118,14 @@ class MovableObject
                 break;
             case 3:
                 xco -= speedInPixels;
-                if(yco < 0)
-                    yco = Raylib.GetScreenHeight(); 
+                if(xco < 0)
+                {
+                    xco = Raylib.GetScreenWidth();
+                }
+                    
                 break;
         }
+        
 
     }
 
