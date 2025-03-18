@@ -35,7 +35,8 @@ class Player : MovableObject
                 orientation = 2;
                 break;
         }
-        switch (Input.GetAxis("horizontal")){
+        switch (Input.GetAxis("horizontal"))
+        {
             case (-1):
                 orientation = 3;
                 break;
@@ -45,13 +46,15 @@ class Player : MovableObject
         }
     }
 
+    /*
     public void MoveByAxis()
     {
         xco += Input.GetAxis("horizontal") * speedInPixels;
         yco += Input.GetAxis("vertical") * speedInPixels;
         UpdateOrientation();
-       
     }
+    */
+
     public void MoveByVectorAndKeyboard()
     {
         // Bewegt das Mob direkt mit input

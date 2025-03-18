@@ -8,8 +8,8 @@ class MovableObject
     protected int orientation;
     public int xco;
     public int yco;
-    internal float acceleration = 2f;
-    internal float friction = 0.1f;
+    internal float acceleration = 1.1f;
+    internal float friction = 0.2f;
     internal Vector2 pos;
     internal Vector2 velocity;
 
@@ -90,9 +90,56 @@ class MovableObject
     public void bump(MovableObject m)
     {
         // Von welcher Seite werden wir weggestoßen?
-        Move(m.orientation, 20);       
-        Move(m.orientation, 10);       
-        Move(m.orientation, 5);       
+        if(!(this.orientation == m.orientation))
+        {
+            Move(m.orientation, 20);       
+            Move(m.orientation, 10);       
+            Move(m.orientation, 5);       
+
+        }
+        else
+        {
+            if(orientation == 1)
+            {
+                bool isBehind = (this.pos.X < m.pos.X);
+                if(isBehind)
+                {
+                    m.Move(m.orientation, 20);       
+                    m.Move(m.orientation, 10);       
+                    m.Move(m.orientation, 5);       
+                }
+            }
+            if(orientation == 3)
+            {
+                bool isBehind = (this.pos.X > m.pos.X);
+                if(isBehind)
+                {
+                    m.Move(m.orientation, 20);       
+                    m.Move(m.orientation, 10);       
+                    m.Move(m.orientation, 5);       
+                }
+            }
+            if(orientation == 0)
+            {
+                bool isBehind = (this.pos.Y > m.pos.Y);
+                if(isBehind)
+                {
+                    m.Move(m.orientation, 20);       
+                    m.Move(m.orientation, 10);       
+                    m.Move(m.orientation, 5);       
+                }
+            }
+            if(orientation == 2)
+            {
+                bool isBehind = (this.pos.Y < m.pos.Y);
+                if(isBehind)
+                {
+                    m.Move(m.orientation, 20);       
+                    m.Move(m.orientation, 10);       
+                    m.Move(m.orientation, 5);       
+                }
+            }
+        }
         //MoveByVectorOrientation();       
     }
 
@@ -100,30 +147,39 @@ class MovableObject
     {
         Random rnd = new Random();
         int side = rnd.Next(0, 4);
+
         switch (side)
         {
             case (0):
                 orientation = 2;
                 yco = 0;
                 pos.Y = 0;
+                xco = rnd.Next(10, Raylib.GetScreenWidth() - 10);
+                pos.X = xco;
                 Draw();
                 break;
             case (1):
                 orientation = 3;
                 xco = Raylib.GetScreenWidth();
                 pos.X = Raylib.GetScreenWidth();
+                yco = rnd.Next(10, Raylib.GetScreenHeight() - 10);
+                pos.Y = yco;
                 Draw();
                 break;
             case (2):
                 orientation = 0;
                 yco = Raylib.GetScreenHeight();
                 pos.Y = Raylib.GetScreenHeight();
+                xco = rnd.Next(10, Raylib.GetScreenWidth() - 10);
+                pos.X = xco;
                 Draw();
                 break;
             case (3):
                 orientation = 1;
                 xco = 0;
                 pos.X = 0;
+                yco = rnd.Next(10, Raylib.GetScreenHeight() - 10);
+                pos.Y = yco;
                 Draw();
                 break;
 
