@@ -3,23 +3,59 @@ using System.Transactions;
 
 class Player : MovableObject
 {
-    static KeyboardKey Up = KeyboardKey.KEY_E;
-    static KeyboardKey Right = KeyboardKey.KEY_F;
-    static KeyboardKey Down = KeyboardKey.KEY_D;
-    static KeyboardKey Left = KeyboardKey.KEY_S;
+    static readonly KeyboardKey Up = KeyboardKey.KEY_E;
+    static readonly KeyboardKey Right = KeyboardKey.KEY_F;
+    static readonly KeyboardKey Down = KeyboardKey.KEY_D;
+    static readonly KeyboardKey Left = KeyboardKey.KEY_S;
 
     public Player() :
         base(Raylib.RED)
     {
+       
     }
 
     internal void update()
     {
-        movePlayer();
+        //Draw();
+        //MoveByAxis();
+        DrawByVector();
+        MoveByVector();
     }
+
+    public void UpdateOrientation()
+    {
+        switch (Input.GetAxis("vertical"))
+            {
+            case (-1):
+                orientation = 0;
+                break;
+            case (1):
+                orientation = 2;
+                break;
+        }
+        switch (Input.GetAxis("horizontal")){
+            case (-1):
+                orientation = 3;
+                break;
+            case (1):
+                orientation = 1;
+                break;
+        }
+        Raylib.DrawText("Orientation: " + orientation, 30, 30, 50, Raylib.BLACK);
+    }
+
+    public void MoveByAxis()
+    {
+        xco += Input.GetAxis("horizontal") * speedInPixels;
+        yco += Input.GetAxis("vertical") * speedInPixels;
+        UpdateOrientation();
+       
+    }
+    
 
     private void movePlayer()
     {
+
         if (Raylib.IsKeyDown(KeyboardKey.KEY_UP) || Raylib.IsKeyDown(Up))
         {
             orientation = 0;

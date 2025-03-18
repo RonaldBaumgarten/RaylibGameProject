@@ -20,7 +20,6 @@ class Game
     public void update()
     {
 
-        player.Draw();
         player.update();
 
         // update roundValue
@@ -30,7 +29,7 @@ class Game
         if(roundValue  >= 350)
             roundValue = 0;
 
-        // let's see if we want to spawn anoter enemy
+        // let's see if we want to spawn another enemy
         if (roundValue == 0)
         {
             enemies.Add(new MovableObject());
@@ -40,8 +39,15 @@ class Game
         // draw and move every enemy
         foreach(MovableObject m in enemies)
         {
-            m.Draw();
+            m.Draw(); 
+            //m.DrawByVector();
             m.Move();
+            //m.MoveByVectorOrientation;
+            if (player.isColliding(m))
+            {
+                player.bump(m);
+                m.bump(player);
+            }
         }
 
     }
