@@ -15,7 +15,7 @@ class Program
             Raylib.SetTargetFPS(60);
             Raylib.DrawFPS(12, 12);
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(Raylib.WHITE);
+            Raylib.ClearBackground(Raylib.BEIGE);
             game.update();
             Raylib.EndDrawing();
         }

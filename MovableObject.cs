@@ -8,10 +8,10 @@ class MovableObject
     protected int orientation;
     public int xco;
     public int yco;
-    private float acceleration = 2f;
-    private float friction = 0.1f;
-    private Vector2 pos;
-    private Vector2 velocity;
+    internal float acceleration = 2f;
+    internal float friction = 0.1f;
+    internal Vector2 pos;
+    internal Vector2 velocity;
 
     public MovableObject()
     {
@@ -60,6 +60,7 @@ class MovableObject
         Raylib.DrawCircleV(pos, 20f, Raylib.YELLOW);
     }
 
+    /*
     public bool isColliding(MovableObject m)
     {
         int width = 20;
@@ -75,6 +76,24 @@ class MovableObject
 
         return false;
     }
+    */
+
+    public bool isCollidingByAxis(MovableObject m)
+    {
+        int width = 20;
+        int heigth = 30;
+
+        if(this.pos.X <= m.pos.X+width && this.pos.X+width >= m.pos.X)
+        {
+            if(this.pos.Y <= (m.pos.Y+heigth) && this.pos.Y+heigth >= m.pos.Y)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     public void bump(MovableObject m)
     {
@@ -123,27 +142,7 @@ class MovableObject
         yco = (int)pos.Y;
     }
 
-    public void MoveByVector()
-    {
-        // Bewegt das Mob direkt mit input
-        Vector2 dir = new Vector2(Input.GetAxis("horizontal"), Input.GetAxis("vertical"));
-        if (dir.LengthSquared() > 0f)
-        {
-            dir = Vector2.Normalize(dir);
-        }
-        velocity += dir * acceleration;
-        pos += velocity;
-
-        velocity -= velocity * friction;
-
-
-        UpdateCoordinates();
-        //Raylib.DrawText("Orientation: " + orientation, 30, 30, 50, Raylib.BLACK);
-        Raylib.DrawText("Velocity : " + velocity, 30, 30, 50, Raylib.BLACK);
-
-    }
-
-    public void MoveByVectorOrientation()
+        public void MoveByVectorOrientation()
     {
         if(orientation == 0)
         {

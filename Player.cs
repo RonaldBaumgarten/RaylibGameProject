@@ -1,5 +1,6 @@
 ﻿using Raylib_CsLo;
 using System.Transactions;
+using System.Numerics;
 
 class Player : MovableObject
 {
@@ -16,10 +17,9 @@ class Player : MovableObject
 
     internal void update()
     {
-        //Draw();
-        //MoveByAxis();
         DrawByVector();
-        MoveByVector();
+        MoveByVectorAndKeyboard();
+        UpdateOrientation();
     }
 
     public void UpdateOrientation()
@@ -41,7 +41,6 @@ class Player : MovableObject
                 orientation = 1;
                 break;
         }
-        Raylib.DrawText("Orientation: " + orientation, 30, 30, 50, Raylib.BLACK);
     }
 
     public void MoveByAxis()
@@ -51,7 +50,25 @@ class Player : MovableObject
         UpdateOrientation();
        
     }
-    
+    public void MoveByVectorAndKeyboard()
+    {
+        // Bewegt das Mob direkt mit input
+        Vector2 dir = new Vector2(Input.GetAxis("horizontal"), Input.GetAxis("vertical"));
+        if (dir.LengthSquared() > 0f)
+        {
+            dir = Vector2.Normalize(dir);
+        }
+        velocity += dir * acceleration;
+        pos += velocity;
+
+        velocity -= velocity * friction;
+
+
+        UpdateCoordinates();
+
+    }
+
+
 
     private void movePlayer()
     {
