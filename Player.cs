@@ -18,7 +18,7 @@ class Player : MovableObject
     {
         DrawByVector();
         MoveByVectorAndKeyboard();
-        UpdateOrientation();
+        //UpdateOrientation();
 
         //Raylib.DrawText("pos.X: " + pos.X + " -- xco: " + xco, 30, 90, 50, Raylib.BLACK);
 
@@ -46,30 +46,26 @@ class Player : MovableObject
         }
     }
 
-    /*
-    public void MoveByAxis()
-    {
-        xco += Input.GetAxis("horizontal") * speedInPixels;
-        yco += Input.GetAxis("vertical") * speedInPixels;
-        UpdateOrientation();
-    }
-    */
-
     public void MoveByVectorAndKeyboard()
     {
         // Bewegt das Mob direkt mit input
-        Vector2 dir = new Vector2(Input.GetAxis("horizontal"), Input.GetAxis("vertical"));
-        if (dir.LengthSquared() > 0f)
+        Vector2 dir = new Vector2(Input.GetAxis("horizontal"), Input.GetAxis("vertical"));  // Vector = ( -1/1 | -1/1 )
+        if (dir.LengthSquared() > 0f)       // Eine Richtung wird gedrueckt
         {
-            dir = Vector2.Normalize(dir);
+            dir = Vector2.Normalize(dir);   // Länge des Vektors wird auf bei schrägen schritten auf 1 gesetzt
         }
-        velocity += dir * acceleration;
+        velocity += dir * acceleration;     // Velocity wird auf Richtung(1) mal acceleration gesetzt
+        // ==>  veolocity wird hier also nie von alleine geringer!
         pos += velocity;
+        // pos wird hier in jedem Durchlauf der Method um velocity erhoeht!
+        // Wenn man direkt stoppen möchte, wenn man die Richtungstaste loslaesst, muss man velocity jetzt auf 0 setzen:
+        // velocity = new Vector2();
         StayOnScreen();
 
-        velocity -= velocity * friction;
+        velocity -= velocity * friction;  // je hoeher friction, dest mehr wird velocity verringert
 
         UpdateCoordinates();
+        UpdateOrientation();
     }
 
     private void MovePlayer()

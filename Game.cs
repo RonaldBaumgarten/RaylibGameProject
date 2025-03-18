@@ -73,7 +73,7 @@ class Game
             if (player.isColliding(m))
             {
 
-                Raylib.DrawText("Collision! ", 30, 30, 50, Raylib.BLACK);
+                //Raylib.DrawText("Collision! ", 30, 30, 50, Raylib.BLACK);
                 player.bump(m);
                 m.bump(player); // funktioniert nicht mehr richtig mit vektorbasierter Bewegung - wahrscheinlich durch velocity?
             }

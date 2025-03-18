@@ -9,7 +9,7 @@ class MovableObject
     public int xco;
     public int yco;
     internal float acceleration = 1.1f;
-    internal float friction = 0.2f;
+    internal float friction = 0.3f;
     internal Vector2 pos;
     internal Vector2 velocity;
 
@@ -23,11 +23,13 @@ class MovableObject
         size = MobSize.M;
         speedInPixels = 5;
         int orientation = 0;
+        // TO-DO: add orientation/direction vector
         xco = Raylib.GetScreenWidth() / 2;
         yco = Raylib.GetScreenHeight() / 2;
         pos = new Vector2(Raylib.GetScreenWidth() / 2,  Raylib.GetScreenHeight() / 2);
         velocity = new Vector2();
     }
+
     public void Draw()
     {
         switch (size)
@@ -35,7 +37,6 @@ class MovableObject
             case (MobSize):
                 Raylib.DrawRectangle(xco, yco, 20, 30, color);
                 break;
-
         }
     }
 
@@ -50,7 +51,7 @@ class MovableObject
         }
     }
 
-    public void Draw2()
+    public void DrawAsCircle()
     {
         Raylib.DrawCircleV(pos, 20f, Raylib.YELLOW);
     }
@@ -67,8 +68,12 @@ class MovableObject
                 return true;
             }
         }
-
         return false;
+    }
+
+    public void Attack()
+    {
+        
     }
 
     public bool isCollidingByAxis(MovableObject m)
