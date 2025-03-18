@@ -44,6 +44,7 @@ class Game
             for (int i = 0; i < asteroids.Length; i++)
             {
                 asteroids[i].Draw();
+                asteroids[i].Update();
             }
         }
 
@@ -66,12 +67,15 @@ class Game
         {
             //m.Draw(); 
             m.DrawByVector();
-            m.Move();
-            //m.MoveByVectorOrientation;
+            //m.Move();
+            m.MoveByVectorOrientation();
             if (player.isCollidingByAxis(m))
+            //if (player.isColliding(m))
             {
+
+                Raylib.DrawText("Collision! ", 30, 30, 50, Raylib.BLACK);
                 player.bump(m);
-                m.bump(player);
+                m.bump(player); // funktioniert nicht mehr richtig mit vektorbasierter Bewegung - wahrscheinlich durch velocity?
             }
         }
 

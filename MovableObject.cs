@@ -45,7 +45,6 @@ class MovableObject
     }
     public void DrawByVector()
     {
-        pos = new Vector2(xco, yco);
         Vector2 medium = new Vector2(20.0f, 30.0f);
         switch (this.size)
         {
@@ -60,15 +59,14 @@ class MovableObject
         Raylib.DrawCircleV(pos, 20f, Raylib.YELLOW);
     }
 
-    /*
     public bool isColliding(MovableObject m)
     {
         int width = 20;
         int heigth = 30;
 
-        if(this.xco <= m.xco+width && this.xco+width >= m.xco)
+        if (this.xco <= m.xco + width && this.xco + width >= m.xco)
         {
-            if(this.yco <= (m.yco+heigth) && this.yco+heigth >= m.yco)
+            if (this.yco <= (m.yco + heigth) && this.yco + heigth >= m.yco)
             {
                 return true;
             }
@@ -76,12 +74,23 @@ class MovableObject
 
         return false;
     }
-    */
+
+    public void StayOnScreen()
+    {
+        if(pos.X < 0)
+            pos.X = Raylib.GetScreenWidth(); 
+        if(pos.X > Raylib.GetScreenWidth())
+            pos.X = 0; 
+        if(pos.Y < 0)
+            pos.Y = Raylib.GetScreenHeight(); 
+        if(pos.Y > Raylib.GetScreenHeight())
+            pos.Y = 0; 
+    }
 
     public bool isCollidingByAxis(MovableObject m)
     {
-        int width = 20;
-        int heigth = 30;
+        float width = 20.0f;
+        float heigth = 30.0f;
 
         if(this.pos.X <= m.pos.X+width && this.pos.X+width >= m.pos.X)
         {
@@ -101,6 +110,7 @@ class MovableObject
         Move(m.orientation, 20);       
         Move(m.orientation, 10);       
         Move(m.orientation, 5);       
+        //MoveByVectorOrientation();       
     }
 
 
@@ -114,21 +124,25 @@ class MovableObject
             case (0):
                 orientation = 2;
                 yco = 0;
+                pos.Y = 0;
                 Draw();
                 break;
             case (1):
                 orientation = 3;
                 xco = Raylib.GetScreenWidth();
+                pos.X = Raylib.GetScreenWidth();
                 Draw();
                 break;
             case (2):
                 orientation = 0;
                 yco = Raylib.GetScreenHeight();
+                pos.Y = Raylib.GetScreenHeight();
                 Draw();
                 break;
             case (3):
                 orientation = 1;
                 xco = 0;
+                pos.X = 0;
                 Draw();
                 break;
 
@@ -142,7 +156,17 @@ class MovableObject
         yco = (int)pos.Y;
     }
 
-        public void MoveByVectorOrientation()
+    public void MoveByVectorOrientation()
+    {
+        MoveByVectorOrientation(orientation);
+    }
+
+    public void MoveByVectorOrientation(int direction)
+    {
+        MoveByVectorOrientation(direction, speedInPixels);
+    }
+
+    public void MoveByVectorOrientation(int direction, int speed)
     {
         if(orientation == 0)
         {
@@ -160,63 +184,18 @@ class MovableObject
         {
             pos.X -= speedInPixels;
         }
+        UpdateCoordinates();
+        StayOnScreen();
     }
 
     public void Move()
     {
-        switch (orientation)
-        {
-            case 0:
-                yco -= speedInPixels;
-                if (yco < 0)
-                    yco = Raylib.GetScreenWidth();
-                break;
-            case 1:
-                xco += speedInPixels;
-                if (xco > Raylib.GetScreenWidth())
-                    xco = 0;
-                break;
-            case 2:
-                yco += speedInPixels;
-                if (yco > Raylib.GetScreenWidth())
-                    yco = 0;
-                break;
-            case 3:
-                xco -= speedInPixels;
-                if (xco < 0)
-                    xco = Raylib.GetScreenWidth();
-                break;
-        }
-        //Raylib.DrawText("X = " + xco, 30, 30, 50, Raylib.BLACK);
+        Move(orientation);
     }
-
 
     public void Move(int direction)
     {
-        switch (direction)
-        {
-            case 0:
-                yco -= speedInPixels;
-                if(yco < 0)
-                    yco = Raylib.GetScreenWidth(); 
-                break;
-            case 1:
-                xco += speedInPixels;
-                if(xco > Raylib.GetScreenWidth())
-                    xco = 0; 
-                break;
-            case 2:
-                yco += speedInPixels;
-                if(yco > Raylib.GetScreenWidth())
-                    yco = 0; 
-                break;
-            case 3:
-                xco -= speedInPixels;
-                if(xco < 0)
-                    xco = Raylib.GetScreenWidth();
-                    
-                break;
-        }
+        Move(direction, speedInPixels);
     }
 
     public void Move(int direction, int speed)
@@ -225,26 +204,18 @@ class MovableObject
         {
             case 0:
                 yco -= speed;
-                if(yco < 0)
-                    yco = Raylib.GetScreenWidth(); 
                 break;
             case 1:
                 xco += speed;
-                if(xco > Raylib.GetScreenWidth())
-                    xco = 0; 
                 break;
             case 2:
                 yco += speed;
-                if(yco > Raylib.GetScreenWidth())
-                    yco = 0; 
                 break;
             case 3:
                 xco -= speed;
-                if(xco < 0)
-                    xco = Raylib.GetScreenWidth();
-                    
                 break;
         }
+        StayOnScreen();
     }
 
 }

@@ -60,6 +60,7 @@ class Player : MovableObject
         }
         velocity += dir * acceleration;
         pos += velocity;
+        StayOnScreen();
 
         velocity -= velocity * friction;
 
