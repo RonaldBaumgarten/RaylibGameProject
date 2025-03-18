@@ -13,17 +13,10 @@ class MovableObject
     internal Vector2 pos;
     internal Vector2 velocity;
 
-    public MovableObject()
+    public MovableObject() : this(Raylib.BLACK)
     {
-        color = Raylib.BLACK;
-        size = MobSize.M;
-        speedInPixels = 5;
-        int orientation = 0;
-        xco = Raylib.GetScreenWidth() / 2;
-        yco = Raylib.GetScreenHeight() / 2;
-        pos = new Vector2(xco * 1.0f, yco * 1.0f);
-        velocity = new Vector2();
     }
+
     public MovableObject(Color c)
     {
         color = c;
@@ -32,6 +25,8 @@ class MovableObject
         int orientation = 0;
         xco = Raylib.GetScreenWidth() / 2;
         yco = Raylib.GetScreenHeight() / 2;
+        pos = new Vector2(Raylib.GetScreenWidth() / 2,  Raylib.GetScreenHeight() / 2);
+        velocity = new Vector2();
     }
     public void Draw()
     {
@@ -43,6 +38,7 @@ class MovableObject
 
         }
     }
+
     public void DrawByVector()
     {
         Vector2 medium = new Vector2(20.0f, 30.0f);
@@ -75,18 +71,6 @@ class MovableObject
         return false;
     }
 
-    public void StayOnScreen()
-    {
-        if(pos.X < 0)
-            pos.X = Raylib.GetScreenWidth(); 
-        if(pos.X > Raylib.GetScreenWidth())
-            pos.X = 0; 
-        if(pos.Y < 0)
-            pos.Y = Raylib.GetScreenHeight(); 
-        if(pos.Y > Raylib.GetScreenHeight())
-            pos.Y = 0; 
-    }
-
     public bool isCollidingByAxis(MovableObject m)
     {
         float width = 20.0f;
@@ -103,7 +87,6 @@ class MovableObject
         return false;
     }
 
-
     public void bump(MovableObject m)
     {
         // Von welcher Seite werden wir weggestoßen?
@@ -112,8 +95,6 @@ class MovableObject
         Move(m.orientation, 5);       
         //MoveByVectorOrientation();       
     }
-
-
 
     public void Spawn()
     {
@@ -154,6 +135,12 @@ class MovableObject
     {
         xco = (int)pos.X;
         yco = (int)pos.Y;
+    }
+
+    public void UpdateVector()
+    {
+        pos.X = xco;
+        pos.Y = yco;
     }
 
     public void MoveByVectorOrientation()
@@ -215,7 +202,34 @@ class MovableObject
                 xco -= speed;
                 break;
         }
-        StayOnScreen();
+        StayOnScreenCo();
+        UpdateVector();
+    }
+
+    public void StayOnScreenCo()
+    {
+        if(xco < 0)
+            xco = Raylib.GetScreenWidth(); 
+        if(xco > Raylib.GetScreenWidth())
+            xco = 0; 
+        if(yco < 0)
+            yco = Raylib.GetScreenHeight(); 
+        if(yco > Raylib.GetScreenHeight())
+            yco = 0;
+        UpdateVector();
+    }
+
+    public void StayOnScreen()
+    {
+        if(pos.X < 0)
+            pos.X = Raylib.GetScreenWidth(); 
+        if(pos.X > Raylib.GetScreenWidth())
+            pos.X = 0; 
+        if(pos.Y < 0)
+            pos.Y = Raylib.GetScreenHeight(); 
+        if(pos.Y > Raylib.GetScreenHeight())
+            pos.Y = 0;
+        UpdateCoordinates();
     }
 
 }

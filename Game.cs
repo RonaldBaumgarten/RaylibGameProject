@@ -1,16 +1,16 @@
 ﻿using Raylib_CsLo;
-using System.Numerics;
+//using System.Numerics;
 using System.Collections.Generic;
 
 class Game
 {
-    readonly bool WANT_ASTEROIDS = true;
+    readonly bool WANT_ASTEROIDS = false;
 
     Player player;
     List<MovableObject> enemies = new List<MovableObject>();
     MovableObject enemy;
     Random r = new Random();
-    int roundValue = 1;
+    int roundNumber = 1;
 
     private Asteroid asteroid;
     private Asteroid[] asteroids = new Asteroid[11];
@@ -25,11 +25,11 @@ class Game
         if (WANT_ASTEROIDS)
         {
         // create Asteroids:
-        for(int i = 0; i < 11; i++)
-        {
-            asteroids[i] = new Asteroid();
-            asteroids[i].Init();
-        }
+            for(int i = 0; i < 11; i++)
+            {
+                asteroids[i] = new Asteroid();
+                asteroids[i].Init();
+            }
 
         }
     }
@@ -37,7 +37,7 @@ class Game
     public void update()
     {
 
-        player.update();
+        player.Update();
 
         if (WANT_ASTEROIDS)
         {
@@ -48,15 +48,15 @@ class Game
             }
         }
 
-        // update roundValue
+        // update roundNumber
         // roundValue = r.Next(0, 499);
-        // for testing purposes roundValue lineary
-        roundValue++;
-        if(roundValue  >= 350)
-            roundValue = 0;
+        // for testing purposes roundValue lineary:
+        roundNumber++;
+        if(roundNumber  >= 350)
+            roundNumber = 0;
 
         // let's see if we want to spawn another enemy
-        if (roundValue == 0)
+        if (roundNumber == 0)
         {
             enemies.Add(new MovableObject());
             enemies[enemies.Count-1].Spawn();
@@ -69,8 +69,8 @@ class Game
             m.DrawByVector();
             //m.Move();
             m.MoveByVectorOrientation();
-            if (player.isCollidingByAxis(m))
-            //if (player.isColliding(m))
+            //if (player.isCollidingByAxis(m))
+            if (player.isColliding(m))
             {
 
                 Raylib.DrawText("Collision! ", 30, 30, 50, Raylib.BLACK);

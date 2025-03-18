@@ -9,17 +9,19 @@ class Player : MovableObject
     static readonly KeyboardKey Down = KeyboardKey.KEY_D;
     static readonly KeyboardKey Left = KeyboardKey.KEY_S;
 
-    public Player() :
-        base(Raylib.RED)
+    public Player() : base(Raylib.RED)
     {
        
     }
 
-    internal void update()
+    internal void Update()
     {
         DrawByVector();
         MoveByVectorAndKeyboard();
         UpdateOrientation();
+
+        //Raylib.DrawText("pos.X: " + pos.X + " -- xco: " + xco, 30, 90, 50, Raylib.BLACK);
+
     }
 
     public void UpdateOrientation()
@@ -64,14 +66,10 @@ class Player : MovableObject
 
         velocity -= velocity * friction;
 
-
         UpdateCoordinates();
-
     }
 
-
-
-    private void movePlayer()
+    private void MovePlayer()
     {
 
         if (Raylib.IsKeyDown(KeyboardKey.KEY_UP) || Raylib.IsKeyDown(Up))
