@@ -1,21 +1,20 @@
 ﻿using Raylib_CsLo;
 using System.Numerics;
-class MovableObject
+ abstract class MovableObject
 {
     MobSize size;
     Color color;
     public int speedInPixels;
     protected int orientation;
+    protected Vector2 oVec;
     public int xco;
     public int yco;
-    internal float acceleration = 1.1f;
-    internal float friction = 0.3f;
+    internal float acceleration;
+    internal float friction;
     internal Vector2 pos;
     internal Vector2 velocity;
-
-    public MovableObject() : this(Raylib.BLACK)
-    {
-    }
+    // ist orientation als Vektor notwendig? Wenn muss zur Darstellung auf jeden Fall wissen, wohin die Figur schaut.... oder?
+  
 
     public MovableObject(Color c)
     {
@@ -31,16 +30,6 @@ class MovableObject
     }
 
     public void Draw()
-    {
-        switch (size)
-        {
-            case (MobSize):
-                Raylib.DrawRectangle(xco, yco, 20, 30, color);
-                break;
-        }
-    }
-
-    public void DrawByVector()
     {
         Vector2 medium = new Vector2(20.0f, 30.0f);
         switch (this.size)
@@ -73,7 +62,16 @@ class MovableObject
 
     public void Attack()
     {
-        
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_K))
+        {
+            Vector2 dir = Input.GetNormalizedVector();
+            if(dir.LengthSquared() ==  0f)
+            {
+                dir = new Vector2(1, 0);
+            }
+            Vector2 atPos = pos + (dir * 20);
+            Raylib.DrawRectangleV(atPos, new Vector2(20,30), Raylib.YELLOW);
+        }
     }
 
     public bool isCollidingByAxis(MovableObject m)
@@ -161,6 +159,7 @@ class MovableObject
                 pos.Y = 0;
                 xco = rnd.Next(10, Raylib.GetScreenWidth() - 10);
                 pos.X = xco;
+                //Draw();
                 Draw();
                 break;
             case (1):
@@ -169,6 +168,7 @@ class MovableObject
                 pos.X = Raylib.GetScreenWidth();
                 yco = rnd.Next(10, Raylib.GetScreenHeight() - 10);
                 pos.Y = yco;
+                //Draw();
                 Draw();
                 break;
             case (2):
@@ -177,6 +177,7 @@ class MovableObject
                 pos.Y = Raylib.GetScreenHeight();
                 xco = rnd.Next(10, Raylib.GetScreenWidth() - 10);
                 pos.X = xco;
+                //Draw();
                 Draw();
                 break;
             case (3):
@@ -185,6 +186,7 @@ class MovableObject
                 pos.X = 0;
                 yco = rnd.Next(10, Raylib.GetScreenHeight() - 10);
                 pos.Y = yco;
+                //Draw();
                 Draw();
                 break;
 
@@ -204,46 +206,23 @@ class MovableObject
         pos.Y = yco;
     }
 
-    public void MoveByVectorOrientation()
+    public void MoveSteady()
     {
-        MoveByVectorOrientation(orientation);
+        MoveSteady(this.oVec * speedInPixels);
     }
 
-    public void MoveByVectorOrientation(int direction)
+    public void MoveSteady(Vector2 velocity)
     {
-        MoveByVectorOrientation(direction, speedInPixels);
-    }
-
-    public void MoveByVectorOrientation(int direction, int speed)
-    {
-        if(orientation == 0)
-        {
-            pos.Y -= speedInPixels;
-        }
-        if(orientation == 1)
-        {
-            pos.X += speedInPixels;
-        }
-        if(orientation == 2)
-        {
-            pos.Y += speedInPixels;
-        }
-        if(orientation == 3)
-        {
-            pos.X -= speedInPixels;
-        }
-        UpdateCoordinates();
+        // ==>  veolocity wird hier also nie von alleine geringer!
+        pos += velocity;
+        // pos wird hier in jedem Durchlauf der Method um velocity erhoeht!
+        // Wenn man direkt stoppen möchte, wenn man die Richtungstaste loslaesst, muss man velocity jetzt auf 0 setzen:
+        // velocity = new Vector2();
         StayOnScreen();
-    }
 
-    public void Move()
-    {
-        Move(orientation);
-    }
+        UpdateCoordinates();
+        UpdateOrientation();
 
-    public void Move(int direction)
-    {
-        Move(direction, speedInPixels);
     }
 
     public void Move(int direction, int speed)
@@ -293,7 +272,30 @@ class MovableObject
         UpdateCoordinates();
     }
 
+    public void UpdateOrientation()
+    {
+        switch (Input.GetAxis("vertical"))
+            {
+            case (-1):
+                orientation = 0;
+                break;
+            case (1):
+                orientation = 2;
+                break;
+        }
+        switch (Input.GetAxis("horizontal"))
+        {
+            case (-1):
+                orientation = 3;
+                break;
+            case (1):
+                orientation = 1;
+                break;
+        }
+    }
+
 }
+
 
 
 public enum MobSize

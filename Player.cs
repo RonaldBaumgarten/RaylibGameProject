@@ -11,45 +11,26 @@ class Player : MovableObject
 
     public Player() : base(Raylib.RED)
     {
-       
+        acceleration = 2.0f;
+        friction = 0.3f;
     }
 
     internal void Update()
     {
-        DrawByVector();
+        Draw();
         MoveByVectorAndKeyboard();
+        Attack();
         //UpdateOrientation();
 
         //Raylib.DrawText("pos.X: " + pos.X + " -- xco: " + xco, 30, 90, 50, Raylib.BLACK);
 
     }
 
-    public void UpdateOrientation()
-    {
-        switch (Input.GetAxis("vertical"))
-            {
-            case (-1):
-                orientation = 0;
-                break;
-            case (1):
-                orientation = 2;
-                break;
-        }
-        switch (Input.GetAxis("horizontal"))
-        {
-            case (-1):
-                orientation = 3;
-                break;
-            case (1):
-                orientation = 1;
-                break;
-        }
-    }
 
     public void MoveByVectorAndKeyboard()
     {
         // Bewegt das Mob direkt mit input
-        Vector2 dir = new Vector2(Input.GetAxis("horizontal"), Input.GetAxis("vertical"));  // Vector = ( -1/1 | -1/1 )
+        Vector2 dir = Input.GetVector();    // Vector = ( -1/1 | -1/1 )
         if (dir.LengthSquared() > 0f)       // Eine Richtung wird gedrueckt
         {
             dir = Vector2.Normalize(dir);   // Länge des Vektors wird auf bei schrägen schritten auf 1 gesetzt
@@ -68,29 +49,4 @@ class Player : MovableObject
         UpdateOrientation();
     }
 
-    private void MovePlayer()
-    {
-
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_UP) || Raylib.IsKeyDown(Up))
-        {
-            orientation = 0;
-            Move();
-        }
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) || Raylib.IsKeyDown(Right))
-        {
-            orientation = 1;
-            Move();
-        }
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN) || Raylib.IsKeyDown(Down))
-        {
-            orientation = 2;
-            Move();
-        }
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT) || Raylib.IsKeyDown(Left))
-        {
-            orientation = 3;
-            Move();
-        }
-
-    }
 }

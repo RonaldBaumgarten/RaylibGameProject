@@ -1,12 +1,14 @@
 ﻿using Raylib_CsLo;
 
-namespace HelloWorld;
+namespace RaylibGameProject;
 
 class Program
 {
+    readonly static int WINDOWW = 1600;
+    readonly static int WINDOWH = 960;
     public static void Main()
     {
-        Raylib.InitWindow(1600, 960, "Hello World");
+        Raylib.InitWindow(WINDOWW, WINDOWH, "Hello World");
 
         Game game = new Game();
 
@@ -16,7 +18,7 @@ class Program
             Raylib.DrawFPS(12, 12);
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Raylib.BEIGE);
-            game.update();
+            game.Update();
             Raylib.EndDrawing();
         }
 

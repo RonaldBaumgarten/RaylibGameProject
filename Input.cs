@@ -1,4 +1,6 @@
-﻿using Raylib_CsLo;
+﻿using System.Numerics;
+using System.Runtime.CompilerServices;
+using Raylib_CsLo;
 
 // written in course
 public class Input
@@ -21,6 +23,24 @@ public class Input
             if (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN)|| Raylib.IsKeyDown(Down)) return 1;
         }
         return 0;
-        
+    }
+
+    public static Vector2 GetVector()
+    {
+        int h = GetAxis("horizontal");
+        int v = GetAxis("vertical");
+
+        return new Vector2(h, v);
+        //return Vector2.Normalize(new Vector2(h, v));
+    }
+
+    public static Vector2 GetNormalizedVector()
+    {
+        Vector2 v = GetVector();
+        if(v.LengthSquared() > 0f)
+        {
+            return Vector2.Normalize(v);
+        }
+        return v;
     }
 }
