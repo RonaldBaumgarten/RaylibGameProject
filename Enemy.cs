@@ -3,7 +3,11 @@ using System.Numerics;
 
  class Enemy : MovableObject
 {
-    public Enemy() : this(Raylib.BLACK) { }
+    //public Enemy() : this(Raylib.BLACK) { }
+    public Enemy(Game g) : this(Raylib.BLACK) 
+    {
+        game = g;
+    }
 
     public Enemy(Color c) : base(c) 
     {

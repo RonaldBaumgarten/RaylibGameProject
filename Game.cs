@@ -12,53 +12,31 @@ class Game
     Random r = new Random();
     int roundNumber = 1;
 
-    private Asteroid asteroid;
-    private Asteroid[] asteroids = new Asteroid[11];
+    public String messageA;
+    public String messageB;
 
     Enemy test;
     public Game()
     {
-        player = new Player();
-        enemy = new Enemy();
+        player = new Player(this);
+        enemy = new Enemy(this);
         enemy.Spawn();
         enemies.Add(enemy);
-        test = new Enemy(Raylib.BLUE);
-        test.pos = new Vector2(300, 400);
-        //test.Spawn();
-        //test.MoveByVectorWithoutFriction(new Vector2(1f, 0f));
-
-        if (WANT_ASTEROIDS)
-        {
-        // create Asteroids:
-            for(int i = 0; i < 11; i++)
-            {
-                asteroids[i] = new Asteroid();
-                asteroids[i].Init();
-            }
-
-        }
     }
 
     public void Update()
     {
-        test.Draw();
+        Raylib.DrawText(messageA, 30, 30, 50, Raylib.BLACK);
+        Raylib.DrawText(messageB, 30, 70, 50, Raylib.BLACK);
+
         Vector2 vel = new Vector2(0f, 3f);
-        test.MoveSteady(vel);
 
         player.Update();
 
-        if (WANT_ASTEROIDS)
-        {
-            for (int i = 0; i < asteroids.Length; i++)
-            {
-                asteroids[i].Draw();
-                asteroids[i].Update();
-            }
-        }
-
+        /**** Random round number to use for spawning enemies ****/
         // update roundNumber
         // roundValue = r.Next(0, 499);
-        // for testing purposes roundValue lineary:
+        /**** For testing purposes roundValue lineary ***/
         roundNumber++;
         if(roundNumber  >= 350)
             roundNumber = 0;
@@ -66,7 +44,7 @@ class Game
         // let's see if we want to spawn another enemy
         if (roundNumber == 0)
         {
-            enemies.Add(new Enemy());
+            enemies.Add(new Enemy(this));
             enemies[enemies.Count-1].Spawn();
         }
        
@@ -78,9 +56,9 @@ class Game
             //if (player.isCollidingByAxis(m))
             if (player.isColliding(m))
             {
-                //Raylib.DrawText("Collision! ", 30, 30, 50, Raylib.BLACK);
-                player.bump(m);
+                //messageA = "Collision!";
                 m.bump(player); // funktioniert nicht mehr richtig mit vektorbasierter Bewegung - wahrscheinlich durch velocity?
+                player.bump(m);
             }
         }
 

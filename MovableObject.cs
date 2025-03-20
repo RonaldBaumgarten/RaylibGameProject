@@ -2,6 +2,7 @@
 using System.Numerics;
  abstract class MovableObject
 {
+    internal Game game;
     MobSize size;
     Color color;
     public int speedInPixels;
@@ -76,16 +77,25 @@ using System.Numerics;
 
     public void bump(MovableObject m)
     {
+        m.velocity = new Vector2(0,0);
+        // TO-DO: Orientation des Players ist das aktuelle Problem!!!? Oder, dass erst Enemy gebumpt wird?
         // Von welcher Seite werden wir weggestoßen?
+        /*
         if(!(this.orientation == m.orientation))
         {
-            Move(m.orientation, 20);       
-            Move(m.orientation, 10);       
-            Move(m.orientation, 5);       
+        */
+            game.messageA = "NOT same orientation";
+            m.Move(this.orientationV, 20);       
+            m.Move(this.orientationV, 10);       
+            m.Move(this.orientationV, 5);       
             
+        /*
         }
         else
         {
+            game.messageB = "SAME orientation";
+            //Raylib.DrawText("Collision! Different orientation", 30, 30, 50, Raylib.BLACK);
+
             if(orientation == 1)
             {
                 bool isBehind = (this.pos.X < m.pos.X);
@@ -128,7 +138,7 @@ using System.Numerics;
             }
         }
         
-        velocity = new Vector2(0,0);
+        */
         //MoveByVectorOrientation();       
     }
 
@@ -224,7 +234,12 @@ using System.Numerics;
     }
     public void Move(Vector2 dir)
     {
-        velocity += dir * acceleration;     // Velocity wird auf Richtung(1) mal acceleration gesetzt
+        Move(dir, this.acceleration);
+    }
+
+    public void Move(Vector2 dir, float accel)
+    {
+        velocity += dir * accel;     // Velocity wird auf Richtung(1) mal acceleration gesetzt
         // ==>  veolocity wird hier also nie von alleine geringer!
         pos += velocity;
         // pos wird hier in jedem Durchlauf der Method um velocity erhoeht!
@@ -237,7 +252,6 @@ using System.Numerics;
         UpdateCoordinates();
         UpdateOrientation();
     }
-
     public void Move(int direction, int speed)
     {
         switch (direction)

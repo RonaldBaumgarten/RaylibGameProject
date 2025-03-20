@@ -9,11 +9,12 @@ class Player : MovableObject
     static readonly KeyboardKey Down = KeyboardKey.KEY_D;
     static readonly KeyboardKey Left = KeyboardKey.KEY_S;
 
-    public Player() : base(Raylib.RED)
+    public Player(Game g) : base(Raylib.RED)
     {
         base.acceleration = 2.0f;
         base.friction = 0.3f;
         orientationV = new Vector2(1, 0);
+        game = g;
     }
 
     internal void Update()
