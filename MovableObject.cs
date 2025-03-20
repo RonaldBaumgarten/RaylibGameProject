@@ -1,93 +1,113 @@
 ﻿using Raylib_CsLo;
 using System.Numerics;
- abstract class MovableObject
+  class MovableObject
 {
     internal Game game;
     MobSize size;
     Color color;
-    public int speedInPixels;
+    public int speedInPixels;   // TO-DO: wird nurnoch fuer MoveSteady() benutzt
     protected int orientation;
-    public int xco;
-    public int yco;
     internal float acceleration;
     internal float friction;
     internal Vector2 pos;
     internal Vector2 velocity;
     protected Vector2 orientationV;
 
-    public MovableObject(Color c)
+    public MovableObject(Color c) : this(new Vector2(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2), c) { }
+
+    public MovableObject(Vector2 pos, Color c) :  this( pos,  c, new Vector2(Raylib.GetScreenWidth()) ) {}
+
+    public MovableObject(Vector2 pos, Color c, Vector2 o)
     {
         color = c;
         size = MobSize.M;
         speedInPixels = 5;
         int orientation = 0;
         // TO-DO: add orientation/direction vector
-        xco = Raylib.GetScreenWidth() / 2;
-        yco = Raylib.GetScreenHeight() / 2;
-        pos = new Vector2(Raylib.GetScreenWidth() / 2,  Raylib.GetScreenHeight() / 2);
+        this.pos = pos;
         velocity = new Vector2();
+        orientationV = o;
     }
+
 
     public void Draw()
     {
-        Vector2 medium = new Vector2(20.0f, 30.0f);
+        float width;
+        float height;
+        switch (this.size)
+        {
+            case (MobSize.S):
+                this.pos.Y += 5;
+                width = 10;
+                height = 10;
+                break;
+            case (MobSize.M):
+                width = 20;
+                height = 30;
+                break;
+            default:
+                this.pos.Y -= 5;
+                width = 30;
+                height = 40;
+                break;
+        }
+        Vector2 size = new Vector2(width, height);
         switch (this.size)
         {
             case (MobSize):
-                Raylib.DrawRectangleV(pos, medium, color);
+                Raylib.DrawRectangleV(pos, size, color);
                 break;
         }
     }
+
 
     public void DrawAsCircle()
     {
         Raylib.DrawCircleV(pos, 20f, Raylib.YELLOW);
     }
 
-    public bool isColliding(MovableObject m)
+    public bool isColliding(MovableObject m)    // Benutzt gerade noch keine size des Obejektes!!!
     {
-        int width = 20;
-        int heigth = 30;
-
-        if (this.xco <= m.xco + width && this.xco + width >= m.xco)
+        int width;
+        int height;
+        switch (this.size)
         {
-            if (this.yco <= (m.yco + heigth) && this.yco + heigth >= m.yco)
+            case (MobSize.S):
+                width = 10;
+                height = 10;
+                break;
+            case (MobSize.M):
+                width = 20;
+                height = 30;
+                break;
+            default:
+                width = 30;
+                height = 40;
+                break;
+        }
+
+        if (this.pos.X <= m.pos.X + width && this.pos.X + width >= m.pos.X)
+        {
+            if (this.pos.Y <= (m.pos.Y + height) && this.pos.Y + height >= m.pos.Y)
             {
                 return true;
             }
         }
-        return false;
-    }
-
-    public bool isCollidingByAxis(MovableObject m)
-    {
-        float width = 20.0f;
-        float heigth = 30.0f;
-
-        if(this.pos.X <= m.pos.X+width && this.pos.X+width >= m.pos.X)
-        {
-            if(this.pos.Y <= (m.pos.Y+heigth) && this.pos.Y+heigth >= m.pos.Y)
-            {
-                return true;
-            }
-        }
-
         return false;
     }
 
     public void bump(MovableObject m)
     {
-
         // the angle between the two vectors is less than 90 degrees if Dot-Product > 0!
         float p = Vector2.Dot(this.orientationV, m.orientationV);
-        String prod = "Angle between MoBs: " + p;   // Debug-Message
-        game.messageB = prod;                       // Debug-Message
+        String prod = "Angle between MoBs: " + p;       // Debug-Message
+        //game.messageB = prod;                         // Debug-Message - gibt gerade Fehler!!!
 
         /*** When MoBs are not facing the same direction: ***/
         // the angle between the two vectors is less than 90 degrees if Dot-Product > 0!
         if(p <= 0)
         {
-            game.messageA = "NOT same orientation";
+            //game.messageA = "NOT same orientation";
             m.velocity = new Vector2(0,0);
             m.Move(this.orientationV, 20);       
             m.Move(this.orientationV, 10);       
@@ -155,38 +175,26 @@ using System.Numerics;
         {
             case (0):
                 orientation = 2;
-                yco = 0;
                 pos.Y = 0;
-                xco = rnd.Next(10, Raylib.GetScreenWidth() - 10);
-                pos.X = xco;
-                //Draw();
+                pos.X = rnd.Next(10, Raylib.GetScreenWidth() - 10);
                 Draw();
                 break;
             case (1):
                 orientation = 3;
-                xco = Raylib.GetScreenWidth();
                 pos.X = Raylib.GetScreenWidth();
-                yco = rnd.Next(10, Raylib.GetScreenHeight() - 10);
-                pos.Y = yco;
-                //Draw();
+                pos.Y = rnd.Next(10, Raylib.GetScreenHeight() - 10);
                 Draw();
                 break;
             case (2):
                 orientation = 0;
-                yco = Raylib.GetScreenHeight();
                 pos.Y = Raylib.GetScreenHeight();
-                xco = rnd.Next(10, Raylib.GetScreenWidth() - 10);
-                pos.X = xco;
-                //Draw();
+                pos.X = rnd.Next(10, Raylib.GetScreenWidth() - 10);
                 Draw();
                 break;
             case (3):
                 orientation = 1;
-                xco = 0;
                 pos.X = 0;
-                yco = rnd.Next(10, Raylib.GetScreenHeight() - 10);
-                pos.Y = yco;
-                //Draw();
+                pos.Y = rnd.Next(10, Raylib.GetScreenHeight() - 10);
                 Draw();
                 break;
 
@@ -195,6 +203,7 @@ using System.Numerics;
     }
 
     public void Attack()
+    /*** We need to bump enemy that is some pixels away and then delet it from Game's enemy-list ***/
     {
         if (Raylib.IsKeyDown(KeyboardKey.KEY_K))
         {
@@ -204,7 +213,17 @@ using System.Numerics;
                 dir = new Vector2(1, 0);
             }
             Vector2 atPos = pos + (dir * 20);
-            Raylib.DrawRectangleV(atPos, new Vector2(20,30), Raylib.YELLOW);
+            MovableObject attack = new MovableObject(atPos, Raylib.YELLOW, this.orientationV);
+            attack.size = MobSize.L;
+            attack.Draw();
+            foreach(MovableObject m in game.enemies)
+            {
+                if(attack.isColliding(m))
+                {
+                    game.messageA = "HIER!";
+                    attack.bump(m);
+                }
+            }
         }
     }
 
@@ -215,26 +234,17 @@ using System.Numerics;
 
     public void MoveSteady(Vector2 velocity)
     {
-        // ==>  veolocity wird hier also nie von alleine geringer!
         pos += velocity;
         // pos wird hier in jedem Durchlauf der Method um velocity erhoeht!
         // Wenn man direkt stoppen möchte, wenn man die Richtungstaste loslaesst, muss man velocity jetzt auf 0 setzen:
         // velocity = new Vector2();
         StayOnScreen();
-
-        UpdateCoordinates();
         UpdateOrientation();
     }
 
     public void Move()
     {
-        velocity += orientationV * acceleration;
-        pos += velocity;
-        StayOnScreen();
-        velocity -= velocity * friction;  // je hoeher friction, dest mehr wird velocity verringert
-        
-        UpdateCoordinates();
-        UpdateOrientation();
+        Move(orientationV);
     }
     public void Move(Vector2 dir)
     {
@@ -253,21 +263,7 @@ using System.Numerics;
 
         velocity -= velocity * friction;  // je hoeher friction, dest mehr wird velocity verringert
 
-        UpdateCoordinates();
         UpdateOrientation();
-    }
-
-    public void StayOnScreenCo()
-    {
-        if(xco < 0)
-            xco = Raylib.GetScreenWidth(); 
-        if(xco > Raylib.GetScreenWidth())
-            xco = 0; 
-        if(yco < 0)
-            yco = Raylib.GetScreenHeight(); 
-        if(yco > Raylib.GetScreenHeight())
-            yco = 0;
-        UpdateVector();
     }
 
     public void StayOnScreen()
@@ -280,7 +276,6 @@ using System.Numerics;
             pos.Y = Raylib.GetScreenHeight(); 
         if(pos.Y > Raylib.GetScreenHeight())
             pos.Y = 0;
-        UpdateCoordinates();
     }
 
     public void UpdateOrientation()
@@ -304,18 +299,6 @@ using System.Numerics;
                 break;
         }
     }
-    public void UpdateCoordinates()
-    {
-        xco = (int)pos.X;
-        yco = (int)pos.Y;
-    }
-
-    public void UpdateVector()
-    {
-        pos.X = xco;
-        pos.Y = yco;
-    }
-
 
 }
 

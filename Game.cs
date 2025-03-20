@@ -7,7 +7,7 @@ class Game
     readonly bool WANT_ASTEROIDS = false;
 
     Player player;
-    List<MovableObject> enemies = new List<MovableObject>();
+    internal List<MovableObject> enemies = new List<MovableObject>();
     MovableObject enemy;
     Random r = new Random();
     int roundNumber = 1;
@@ -38,7 +38,7 @@ class Game
         // roundValue = r.Next(0, 499);
         /**** For testing purposes roundValue lineary ***/
         roundNumber++;
-        if(roundNumber  >= 350)
+        if(roundNumber  >= 250)
             roundNumber = 0;
 
         // let's see if we want to spawn another enemy
