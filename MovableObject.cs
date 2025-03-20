@@ -77,20 +77,24 @@ using System.Numerics;
 
     public void bump(MovableObject m)
     {
-        m.velocity = new Vector2(0,0);
-        // TO-DO: Orientation des Players ist das aktuelle Problem!!!? Oder, dass erst Enemy gebumpt wird?
-        // Von welcher Seite werden wir weggestoßen?
-        /*
-        if(!(this.orientation == m.orientation))
+
+        // the angle between the two vectors is less than 90 degrees if Dot-Product > 0!
+        float p = Vector2.Dot(this.orientationV, m.orientationV);
+        String prod = "Angle between MoBs: " + p;   // Debug-Message
+        game.messageB = prod;                       // Debug-Message
+
+        /*** When MoBs are not facing the same direction: ***/
+        // the angle between the two vectors is less than 90 degrees if Dot-Product > 0!
+        if(p <= 0)
         {
-        */
             game.messageA = "NOT same orientation";
+            m.velocity = new Vector2(0,0);
             m.Move(this.orientationV, 20);       
             m.Move(this.orientationV, 10);       
             m.Move(this.orientationV, 5);       
-            
-        /*
         }
+        /*** When MoBs ARE facing the same direction: ***/
+        /*
         else
         {
             game.messageB = "SAME orientation";
@@ -251,30 +255,6 @@ using System.Numerics;
 
         UpdateCoordinates();
         UpdateOrientation();
-    }
-    public void Move(int direction, int speed)
-    {
-        switch (direction)
-        {
-            case 0:
-                yco -= speed;
-                pos.Y -= speed;
-                break;
-            case 1:
-                xco += speed;
-                pos.X += speed;
-                break;
-            case 2:
-                yco += speed;
-                pos.Y += speed;
-                break;
-            case 3:
-                xco -= speed;
-                pos.X -= speed;
-                break;
-        }
-        StayOnScreenCo();
-        UpdateVector();
     }
 
     public void StayOnScreenCo()
