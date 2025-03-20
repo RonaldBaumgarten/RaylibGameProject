@@ -82,7 +82,7 @@ using System.Numerics;
             Move(m.orientation, 20);       
             Move(m.orientation, 10);       
             Move(m.orientation, 5);       
-
+            
         }
         else
         {
@@ -127,6 +127,8 @@ using System.Numerics;
                 }
             }
         }
+        
+        velocity = new Vector2(0,0);
         //MoveByVectorOrientation();       
     }
 
@@ -210,11 +212,26 @@ using System.Numerics;
         UpdateOrientation();
     }
 
-    public void Move(ref Vector2 velocity)
+    public void Move()
     {
         velocity += orientationV * acceleration;
         pos += velocity;
         StayOnScreen();
+        velocity -= velocity * friction;  // je hoeher friction, dest mehr wird velocity verringert
+        
+        UpdateCoordinates();
+        UpdateOrientation();
+    }
+    public void Move(Vector2 dir)
+    {
+        velocity += dir * acceleration;     // Velocity wird auf Richtung(1) mal acceleration gesetzt
+        // ==>  veolocity wird hier also nie von alleine geringer!
+        pos += velocity;
+        // pos wird hier in jedem Durchlauf der Method um velocity erhoeht!
+        // Wenn man direkt stoppen möchte, wenn man die Richtungstaste loslaesst, muss man velocity jetzt auf 0 setzen:
+        // velocity = new Vector2();
+        StayOnScreen();
+
         velocity -= velocity * friction;  // je hoeher friction, dest mehr wird velocity verringert
 
         UpdateCoordinates();
@@ -227,15 +244,19 @@ using System.Numerics;
         {
             case 0:
                 yco -= speed;
+                pos.Y -= speed;
                 break;
             case 1:
                 xco += speed;
+                pos.X += speed;
                 break;
             case 2:
                 yco += speed;
+                pos.Y += speed;
                 break;
             case 3:
                 xco -= speed;
+                pos.X -= speed;
                 break;
         }
         StayOnScreenCo();
