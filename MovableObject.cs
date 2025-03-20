@@ -6,15 +6,13 @@ using System.Numerics;
     Color color;
     public int speedInPixels;
     protected int orientation;
-    protected Vector2 oVec;
     public int xco;
     public int yco;
     internal float acceleration;
     internal float friction;
     internal Vector2 pos;
     internal Vector2 velocity;
-    // ist orientation als Vektor notwendig? Wenn muss zur Darstellung auf jeden Fall wissen, wohin die Figur schaut.... oder?
-  
+    protected Vector2 orientationV;
 
     public MovableObject(Color c)
     {
@@ -58,20 +56,6 @@ using System.Numerics;
             }
         }
         return false;
-    }
-
-    public void Attack()
-    {
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_K))
-        {
-            Vector2 dir = Input.GetNormalizedVector();
-            if(dir.LengthSquared() ==  0f)
-            {
-                dir = new Vector2(1, 0);
-            }
-            Vector2 atPos = pos + (dir * 20);
-            Raylib.DrawRectangleV(atPos, new Vector2(20,30), Raylib.YELLOW);
-        }
     }
 
     public bool isCollidingByAxis(MovableObject m)
@@ -194,21 +178,23 @@ using System.Numerics;
 
     }
 
-    public void UpdateCoordinates()
+    public void Attack()
     {
-        xco = (int)pos.X;
-        yco = (int)pos.Y;
-    }
-
-    public void UpdateVector()
-    {
-        pos.X = xco;
-        pos.Y = yco;
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_K))
+        {
+            Vector2 dir = Input.GetNormalizedVector();
+            if(dir.LengthSquared() ==  0f)
+            {
+                dir = new Vector2(1, 0);
+            }
+            Vector2 atPos = pos + (dir * 20);
+            Raylib.DrawRectangleV(atPos, new Vector2(20,30), Raylib.YELLOW);
+        }
     }
 
     public void MoveSteady()
     {
-        MoveSteady(this.oVec * speedInPixels);
+        MoveSteady(this.orientationV * speedInPixels);
     }
 
     public void MoveSteady(Vector2 velocity)
@@ -222,7 +208,17 @@ using System.Numerics;
 
         UpdateCoordinates();
         UpdateOrientation();
+    }
 
+    public void Move(ref Vector2 velocity)
+    {
+        velocity += orientationV * acceleration;
+        pos += velocity;
+        StayOnScreen();
+        velocity -= velocity * friction;  // je hoeher friction, dest mehr wird velocity verringert
+
+        UpdateCoordinates();
+        UpdateOrientation();
     }
 
     public void Move(int direction, int speed)
@@ -293,9 +289,20 @@ using System.Numerics;
                 break;
         }
     }
+    public void UpdateCoordinates()
+    {
+        xco = (int)pos.X;
+        yco = (int)pos.Y;
+    }
+
+    public void UpdateVector()
+    {
+        pos.X = xco;
+        pos.Y = yco;
+    }
+
 
 }
-
 
 
 public enum MobSize

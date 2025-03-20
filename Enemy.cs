@@ -9,7 +9,7 @@ using System.Numerics;
     {
         acceleration = 1.2f;
         friction = 0.2f;
-        oVec = new Vector2();
+        orientationV = new Vector2();
 
         Init();
     }
@@ -22,13 +22,13 @@ using System.Numerics;
         int randPosY = Raylib.GetRandomValue(0, Raylib.GetScreenWidth());
         pos = new Vector2(randPosX, randPosY);
         // create random direction to fly in
-        while (oVec.LengthSquared() == 0f)
+        while (orientationV.LengthSquared() == 0f)
         {
             float randXdir = random.NextSingle() * 2f - 1;
             float randYdir = random.NextSingle() * 2f - 1;
-            oVec = new Vector2(randXdir, randYdir);
+            orientationV = new Vector2(randXdir, randYdir);
         }
-        oVec = Vector2.Normalize(oVec);
+        orientationV = Vector2.Normalize(orientationV);
 
     }
 }

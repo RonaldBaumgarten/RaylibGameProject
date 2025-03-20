@@ -11,8 +11,8 @@ class Player : MovableObject
 
     public Player() : base(Raylib.RED)
     {
-        acceleration = 2.0f;
-        friction = 0.3f;
+        base.acceleration = 2.0f;
+        base.friction = 0.3f;
     }
 
     internal void Update()
@@ -30,6 +30,17 @@ class Player : MovableObject
     public void MoveByVectorAndKeyboard()
     {
         // Bewegt das Mob direkt mit input
+
+        /*
+        orientationV = Input.GetVector();
+        if (orientationV.LengthSquared() > 0f)       // Eine Richtung wird gedrueckt
+        {
+            orientationV = Vector2.Normalize(orientationV);   // Länge des Vektors wird auf bei schrägen schritten auf 1 gesetzt
+        }
+
+        Move(ref orientationV);
+
+        */
         Vector2 dir = Input.GetVector();    // Vector = ( -1/1 | -1/1 )
         if (dir.LengthSquared() > 0f)       // Eine Richtung wird gedrueckt
         {
