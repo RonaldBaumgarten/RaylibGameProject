@@ -4,10 +4,12 @@ using System.Collections.Generic;
 
 class Game
 {
-    readonly bool WANT_ASTEROIDS = false;
+    // readonly bool WANT_ASTEROIDS = false;
 
     Player player;
     internal List<MovableObject> enemies = new List<MovableObject>();
+    internal List<Attack> attacks = new List<Attack>();
+    MovableObject toDelete;
     MovableObject enemy;
     Random r = new Random();
     int roundNumber = 1;
@@ -33,8 +35,7 @@ class Game
 
         player.Update();
 
-        /**** Random round number to use for spawning enemies ****/
-        // update roundNumber
+        /**** Random round number to use for spawning enemies ****/ // update roundNumber
         // roundValue = r.Next(0, 499);
         /**** For testing purposes roundValue lineary ***/
         roundNumber++;
@@ -51,15 +52,43 @@ class Game
         // draw and move every enemy
         foreach(MovableObject m in enemies)
         {
-            m.Draw();
-            m.MoveSteady();
-            //if (player.isCollidingByAxis(m))
-            if (player.isColliding(m))
+            if (m.isActive)
             {
-                //messageA = "Collision!";
-                m.bump(player); // funktioniert nicht mehr richtig mit vektorbasierter Bewegung - wahrscheinlich durch velocity?
-                player.bump(m);
+                m.Draw();
+                m.MoveSteady();
+                //if (player.isCollidingByAxis(m))
+                if (player.isColliding(m))
+                {
+                    //messageA = "Collision!";
+                    m.bump(player); // funktioniert nicht mehr richtig mit vektorbasierter Bewegung - wahrscheinlich durch velocity?
+                    player.bump(m);
+                }
+            } else
+            {
+                toDelete = m;
             }
+        }
+
+        enemies.Remove(toDelete);
+        
+        foreach(Attack a in attacks)
+        {
+            a.Update();
+            if (a.isActive)
+            {
+            //    messageA = "HIER!";
+                a.Draw();
+                foreach (MovableObject m in this.enemies)
+                {
+                    if (a.isColliding(m))
+                    {
+                        a.bump(m);
+                        m.isActive = false;
+                        //game.enemies.Remove(m);  // --> Laufzeitfehler
+                    }
+                }
+            }
+
         }
 
     }

@@ -3,7 +3,7 @@ using System.Numerics;
   class MovableObject
 {
     internal Game game;
-    MobSize size;
+    internal MobSize size;
     Color color;
     public int speedInPixels;   // TO-DO: wird nurnoch fuer MoveSteady() benutzt
     protected int orientation;
@@ -12,6 +12,8 @@ using System.Numerics;
     internal Vector2 pos;
     internal Vector2 velocity;
     protected Vector2 orientationV;
+    internal bool isActive;
+    internal float timer;
 
     public MovableObject(Color c) : this(new Vector2(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2), c) { }
 
@@ -25,8 +27,10 @@ using System.Numerics;
         int orientation = 0;
         // TO-DO: add orientation/direction vector
         this.pos = pos;
-        velocity = new Vector2();
+        velocity = new Vector2(0,0);
         orientationV = o;
+        isActive = true;
+        timer = 0f;
     }
 
 
@@ -37,7 +41,6 @@ using System.Numerics;
         switch (this.size)
         {
             case (MobSize.S):
-                this.pos.Y += 5;
                 width = 10;
                 height = 10;
                 break;
@@ -46,18 +49,21 @@ using System.Numerics;
                 height = 30;
                 break;
             default:
-                this.pos.Y -= 5;
                 width = 30;
                 height = 40;
                 break;
         }
         Vector2 size = new Vector2(width, height);
+        /*
         switch (this.size)
         {
             case (MobSize):
+        */
                 Raylib.DrawRectangleV(pos, size, color);
+        /*
                 break;
         }
+        */
     }
 
 
@@ -202,30 +208,7 @@ using System.Numerics;
 
     }
 
-    public void Attack()
-    /*** We need to bump enemy that is some pixels away and then delet it from Game's enemy-list ***/
-    {
-        if (Raylib.IsKeyDown(KeyboardKey.KEY_K))
-        {
-            Vector2 dir = Input.GetNormalizedVector();
-            if(dir.LengthSquared() ==  0f)
-            {
-                dir = new Vector2(1, 0);
-            }
-            Vector2 atPos = pos + (dir * 20);
-            MovableObject attack = new MovableObject(atPos, Raylib.YELLOW, this.orientationV);
-            attack.size = MobSize.L;
-            attack.Draw();
-            foreach(MovableObject m in game.enemies)
-            {
-                if(attack.isColliding(m))
-                {
-                    game.messageA = "HIER!";
-                    attack.bump(m);
-                }
-            }
-        }
-    }
+   
 
     public void MoveSteady()
     {
