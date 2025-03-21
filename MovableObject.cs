@@ -11,9 +11,10 @@ using System.Numerics;
     internal float friction;
     internal Vector2 pos;
     internal Vector2 velocity;
-    protected Vector2 orientationV;
+    internal Vector2 orientationV;
     internal bool isActive;
     internal float timer;
+    internal int hp;
 
     public MovableObject(Color c) : this(new Vector2(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2), c) { }
 
@@ -31,6 +32,7 @@ using System.Numerics;
         orientationV = o;
         isActive = true;
         timer = 0f;
+        hp = 2;
     }
 
 

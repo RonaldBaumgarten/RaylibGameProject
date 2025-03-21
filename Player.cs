@@ -25,12 +25,12 @@ class Player : MovableObject
         //game.messageA = "CAN attack";
         if (canAttack) return;
 
-        game.messageA = "can NOT attack";
+        //game.messageA = "can NOT attack";
 
         timer += Raylib.GetFrameTime();
         if(timer >= attackCooldown)
         {
-            game.messageA = "Timer >= Cooldown";
+            //game.messageA = "Timer >= Cooldown";
             timer = 0f;
             canAttack = true;
         }
@@ -63,7 +63,7 @@ class Player : MovableObject
                 dir = new Vector2(1, 0);
             }
             Vector2 atPos = pos + (dir * 20);
-            Attack attack = new Attack(atPos, Raylib.YELLOW, this.orientationV);
+            Attack attack = new Attack(atPos, Raylib.YELLOW, this.orientationV, this);
             attack.size = MobSize.L;
             game.attacks.Add(attack);
         }

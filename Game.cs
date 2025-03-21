@@ -82,9 +82,16 @@ class Game
                 {
                     if (a.isColliding(m))
                     {
+                        player.velocity = new Vector2(0,0);
+                        m.hp -= 1;
+                        if(m.hp<=0)
+                        {
                         a.bump(m);
                         m.isActive = false;
-                        //game.enemies.Remove(m);  // --> Laufzeitfehler
+                        } else
+                        {
+                            a.bump(m);
+                        }
                     }
                 }
             }
